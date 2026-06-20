@@ -1,0 +1,289 @@
+{% extends "pesquisa/base.html" %}
+{% block title %}Dashboard – Pesquisa em Computação{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold mb-0"><i class="bi bi-bar-chart-line text-primary"></i> Dashboard</h2>
+    <p class="text-muted mb-0 small">Visão geral das respostas coletadas</p>
+  </div>
+  <a href="{% url 'exportar' %}" class="btn btn-success">
+    <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+  </a>
+</div>
+
+<!-- KPIs -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card p-3 text-center border-0 shadow-sm" style="background:linear-gradient(135deg,#1E4D8C,#2E86AB)">
+      <div class="text-white">
+        <div class="fs-1 fw-bold">{{ total }}</div>
+        <div class="small">Total de Respostas</div>
+      </div>
+    </div>
+  </div>
+  {% for p in perfis %}
+  <div class="col-6 col-md-3">
+    <div class="card p-3 text-center border-0 shadow-sm">
+      <div class="fs-2 fw-bold text-primary">{{ p.total }}</div>
+      <div class="small text-muted">{{ p.perfil }}</div>
+      {% if total > 0 %}
+      <div class="progress mt-2" style="height:4px">
+        <div class="progress-bar" style="width:{% widthratio p.total total 100 %}%"></div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs mb-4" id="dashTabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-bs-toggle="tab" href="#tab-geral">
+      <i class="bi bi-grid"></i> Geral
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#tab-prof">
+      <i class="bi bi-person-badge"></i> Profissionais
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#tab-est">
+      <i class="bi bi-mortarboard"></i> Estudantes
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#tab-pub">
+      <i class="bi bi-people"></i> Público Geral
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+
+  <!-- ABA GERAL -->
+  <div class="tab-pane fade show active" id="tab-geral">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card p-4 shadow-sm h-100">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-pie-chart"></i> Distribuição por Perfil</h6>
+          <canvas id="chartPerfil"></canvas>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card p-4 shadow-sm h-100">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-graph-up"></i> Percepção do Mercado de TI</h6>
+          <canvas id="chartMercadoGeral" height="120"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA PROFISSIONAIS -->
+  <div class="tab-pane fade" id="tab-prof">
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-briefcase"></i> Área de Atuação</h6>
+          <canvas id="chartArea" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-clock-history"></i> Tempo de Atuação</h6>
+          <canvas id="chartTempo" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-tools"></i> Competências Técnicas</h6>
+          <canvas id="chartCompTec" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-people"></i> Competências Comportamentais</h6>
+          <canvas id="chartCompComp" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card p-4 shadow-sm">
+      <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-list-ul"></i> Últimas respostas</h6>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle small">
+          <thead class="table-primary">
+            <tr><th>Área</th><th>Tempo</th><th>Regime</th><th>Stack</th><th>Cidade/UF</th><th>Data</th></tr>
+          </thead>
+          <tbody>
+            {% for r in prof_recentes %}
+            <tr>
+              <td>{{ r.get_area_atuacao_display }}</td>
+              <td>{{ r.get_tempo_atuacao_display }}</td>
+              <td>{{ r.get_regime_trabalho_display }}</td>
+              <td>{{ r.stack_principal|default:"–" }}</td>
+              <td>{{ r.cidade }}/{{ r.estado }}</td>
+              <td>{{ r.criado_em|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center text-muted">Sem respostas ainda</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA ESTUDANTES -->
+  <div class="tab-pane fade" id="tab-est">
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-mortarboard"></i> Motivo da Escolha do Curso</h6>
+          <canvas id="chartMotivo" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-123"></i> Semestre Atual</h6>
+          <canvas id="chartSemestre" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card p-4 shadow-sm">
+      <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-list-ul"></i> Últimas respostas</h6>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle small">
+          <thead class="table-success">
+            <tr><th>Curso</th><th>Instituição</th><th>Semestre</th><th>Turno</th><th>Estágio</th><th>Data</th></tr>
+          </thead>
+          <tbody>
+            {% for r in est_recentes %}
+            <tr>
+              <td>{{ r.curso }}</td>
+              <td>{{ r.instituicao }}</td>
+              <td>{{ r.get_semestre_display }}</td>
+              <td>{{ r.get_turno_display }}</td>
+              <td>{% if r.possui_estagio %}<span class="badge bg-success">Sim</span>{% else %}<span class="badge bg-secondary">Não</span>{% endif %}</td>
+              <td>{{ r.criado_em|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center text-muted">Sem respostas ainda</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA PÚBLICO GERAL -->
+  <div class="tab-pane fade" id="tab-pub">
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-phone"></i> Frequência de Uso de Tecnologia</h6>
+          <canvas id="chartFreq" height="200"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-shield-check"></i> Confiança em Sistemas Digitais</h6>
+          <canvas id="chartConfianca" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card p-4 shadow-sm">
+      <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-list-ul"></i> Últimas respostas</h6>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle small">
+          <thead class="table-warning">
+            <tr><th>Freq. Uso</th><th>Confiança</th><th>Associa TI a</th><th>Conhece Prof. TI</th><th>Cidade/UF</th><th>Data</th></tr>
+          </thead>
+          <tbody>
+            {% for r in pub_recentes %}
+            <tr>
+              <td>{{ r.get_frequencia_uso_tecnologia_display }}</td>
+              <td>{{ r.get_confianca_sistemas_display }}</td>
+              <td>{{ r.get_associa_ti_a_display }}</td>
+              <td>{% if r.conhece_profissional_ti %}<span class="badge bg-success">Sim</span>{% else %}<span class="badge bg-secondary">Não</span>{% endif %}</td>
+              <td>{{ r.cidade }}/{{ r.estado }}</td>
+              <td>{{ r.criado_em|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center text-muted">Sem respostas ainda</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  var C = ['#1E4D8C','#2E86AB','#A23B72','#F18F01','#C73E1D','#44BBA4','#E94F37','#3B1F2B'];
+
+  function mk(id, type, labels, data, horizontal) {
+    var ctx = document.getElementById(id);
+    if (!ctx || !labels || !labels.length) return;
+    new Chart(ctx, {
+      type: type,
+      data: { labels: labels, datasets: [{ data: data, backgroundColor: C, borderWidth: 1 }] },
+      options: {
+        indexAxis: horizontal ? 'y' : 'x',
+        responsive: true,
+        plugins: { legend: { display: type === 'pie' || type === 'doughnut' } }
+      }
+    });
+  }
+
+  mk('chartPerfil', 'doughnut',
+    [{% for p in perfis %}'{{ p.perfil }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for p in perfis %}{{ p.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+  mk('chartMercadoGeral', 'bar',
+    [{% for m in mercado_prof %}'{{ m.percebe_mercado }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for m in mercado_prof %}{{ m.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+  mk('chartArea', 'bar',
+    [{% for a in areas %}'{{ a.area_atuacao }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for a in areas %}{{ a.total }}{% if not forloop.last %},{% endif %}{% endfor %}], true
+  );
+  mk('chartTempo', 'pie',
+    [{% for t in tempos %}'{{ t.tempo_atuacao }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for t in tempos %}{{ t.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+  mk('chartCompTec', 'bar',
+    [{% for c in comp_tec_prof %}'{{ c.nome }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for c in comp_tec_prof %}{{ c.total }}{% if not forloop.last %},{% endif %}{% endfor %}], true
+  );
+  mk('chartCompComp', 'bar',
+    [{% for c in comp_comp_prof %}'{{ c.nome }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for c in comp_comp_prof %}{{ c.total }}{% if not forloop.last %},{% endif %}{% endfor %}], true
+  );
+  mk('chartMotivo', 'doughnut',
+    [{% for m in motivos %}'{{ m.motivo_escolha }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for m in motivos %}{{ m.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+  mk('chartSemestre', 'bar',
+    [{% for s in semestres %}'{{ s.semestre }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for s in semestres %}{{ s.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+  mk('chartFreq', 'pie',
+    [{% for f in freq_uso %}'{{ f.frequencia_uso_tecnologia }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for f in freq_uso %}{{ f.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+  mk('chartConfianca', 'doughnut',
+    [{% for c in confianca %}'{{ c.confianca_sistemas }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    [{% for c in confianca %}{{ c.total }}{% if not forloop.last %},{% endif %}{% endfor %}]
+  );
+});
+</script>
+{% endblock %}
