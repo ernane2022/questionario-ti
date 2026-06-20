@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Django
+*.log
+staticfiles/
+media/
+
+# Ambiente
+.env
+*.env
+
+# Docker
+postgres_data/
+
+# VSCode
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
+pesquisa/static/css/
+pesquisa/static/css/

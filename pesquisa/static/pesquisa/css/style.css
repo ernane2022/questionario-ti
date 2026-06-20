@@ -1,0 +1,138 @@
+/* ── Geral ─────────────────────────────────────────────────────────────── */
+body {
+  background-color: #f0f4f8;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #2d3748;
+}
+
+/* ── Navbar ────────────────────────────────────────────────────────────── */
+.navbar {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.13);
+}
+
+/* ── Botões ─────────────────────────────────────────────────────────────── */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.btn-lg {
+  padding: 0.75rem 2rem;
+  font-size: 1.05rem;
+}
+
+/* ── Formulário ─────────────────────────────────────────────────────────── */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #1E4D8C;
+  box-shadow: 0 0 0 3px rgba(30, 77, 140, 0.15);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* Checkboxes em grade */
+.form-check {
+  padding: 6px 0 6px 1.8rem;
+}
+
+/* ── Fieldset (crispy) ──────────────────────────────────────────────────── */
+fieldset.border {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+legend {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1E4D8C;
+  width: auto;
+  padding: 0 0.5rem;
+}
+
+/* ── Seções do questionário ─────────────────────────────────────────────── */
+h4.text-primary {
+  border-left: 4px solid #1E4D8C;
+  padding-left: 0.75rem;
+}
+
+/* ── Dashboard – KPI cards ──────────────────────────────────────────────── */
+.card.bg-primary h1 {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+/* ── Tabela ─────────────────────────────────────────────────────────────── */
+.table thead th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #ebf4ff;
+}
+
+/* ── Ícone grande na index ──────────────────────────────────────────────── */
+.display-1.text-primary {
+  font-size: 5rem;
+}
+
+/* ── Página de obrigado ─────────────────────────────────────────────────── */
+.bi-check-circle-fill {
+  filter: drop-shadow(0 4px 8px rgba(25, 135, 84, 0.3));
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+footer {
+  font-size: 0.82rem;
+  color: #718096;
+  margin-top: 3rem;
+}
+
+/* ── Responsivo ─────────────────────────────────────────────────────────── */
+@media (max-width: 576px) {
+  .card {
+    border-radius: 8px;
+  }
+
+  h1, h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.65rem 1.25rem;
+  }
+}
+
+z
