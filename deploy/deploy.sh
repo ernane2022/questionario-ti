@@ -1,10 +1,13 @@
 #!/bin/bash
 # Script de deploy – Pesquisa em Computação
-# Uso: ./deploy.sh
+# Uso: bash deploy/deploy.sh (executar da raiz do projeto)
 
 set -e
 
 echo "🚀 Iniciando deploy..."
+
+# Garante que está na raiz do projeto
+cd "$(dirname "$0")/.."
 
 # Atualiza o código
 git pull origin master

@@ -34,7 +34,7 @@ cd questionario-ti
 
 ## 5. Configure o ambiente de produção
 ```bash
-cp .env.production .env
+cp deploy/.env.production .env
 nano .env
 ```
 
@@ -55,8 +55,7 @@ certbot certonly --standalone -d pesquisa.ernanecreative.com
 
 ## 7. Substitua o nginx.conf pelo de produção
 ```bash
-cp nginx.conf nginx.conf.local
-cp nginx.conf.production nginx.conf
+cp deploy/nginx.conf nginx.conf
 ```
 
 ## 8. Atualize o docker-compose.yml para montar o certificado
@@ -93,7 +92,7 @@ crontab -e
 ## 12. Deploy de atualizações futuras
 ```bash
 cd /var/www/questionario-ti
-./deploy.sh
+bash deploy/deploy.sh
 ```
 
 ---
