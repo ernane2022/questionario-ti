@@ -1,0 +1,9 @@
+SECRET_KEY=gere-uma-chave-com-python3-c-import-secrets-print-secrets-token-urlsafe-50
+DEBUG=False
+ALLOWED_HOSTS=pesquisa.ernanecreative.com,www.pesquisa.ernanecreative.com
+
+DB_NAME=pesquisa_db
+DB_USER=pesquisa_user
+DB_PASSWORD=senha-forte-e-aleatoria-aqui
+DB_HOST=db
+DB_PORT=5432
